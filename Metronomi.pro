@@ -1,6 +1,6 @@
-QT       += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += core gui
+INCLUDEPATH += /usr/lib/gcc/x86_64-linux-gnu/9/include/stddef.h
+QT += widgets
 
 CONFIG += c++11
 
