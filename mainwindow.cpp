@@ -12,23 +12,43 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , metronome_(new QTimer)
+    , tick_(new QSound("/home/eelisroininen/Repos/MyMetronome/tick.wav"))
     , tempo_(120)
     , isRunning_(false)
 {
     ui->setupUi(this);
     ui->tempoNumber->setDecMode();
     updateDisplay();
+
+    tick_->setLoops(1);
+    connect(metronome_, &QTimer::timeout, this, &MainWindow::playTick);
+
 }
 
 MainWindow::~MainWindow(){
     delete ui;
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *event){
+    if (event->key() == Qt::Key_Up){
+        moreTempo();
+    }
+    if (event->key() == Qt::Key_Down){
+        lessTempo();
+    }
+    if (event->key() == Qt::Key_Space){
+        startStop();
+    }
+}
+
 void MainWindow::startStop(){
     if (isRunning_){
-        metronome_.stop();
+        metronome_->stop();
+        isRunning_ = false;
     } else {
-        // Laske metronomin matikka
+        updateTempo();
+        isRunning_ = true;
+        metronome_->start();
     }
 }
 
@@ -39,6 +59,7 @@ void MainWindow::moreTempo(){
     }
 
     tempo_ += 5;
+    updateTempo();
     updateDisplay();
 }
 
@@ -49,7 +70,14 @@ void MainWindow::lessTempo(){
     }
 
     tempo_ -= 5;
+    updateTempo();
     updateDisplay();
+}
+
+void MainWindow::updateTempo()
+{
+    unsigned int realTempo = (60/tempo_) * 1000;
+    metronome_->setInterval(realTempo);
 }
 
 void MainWindow::updateDisplay(){
@@ -57,3 +85,6 @@ void MainWindow::updateDisplay(){
     ui->tempoNumber->display(tempo_);
 }
 
+void MainWindow::playTick(){
+    tick_->play();
+}
