@@ -1,3 +1,10 @@
+/***
+ * This linux thing sure is hard amirite
+ * HEYHEY my QtCreator works again!!
+ *
+ *
+ * */
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
